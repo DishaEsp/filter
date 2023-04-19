@@ -3,28 +3,48 @@ import React, { useEffect, useState } from "react";
 import config from "../config";
 const Api_url = config.Api_url;
 
-function Cart({ handleClick }) {
+function FilterData({ handleClick }) {
   const [data, setData] = useState([]);
+  const [alldata, setallData] = useState([]);
   const [filterSizeFilter, setFilterSize] = useState([]);
   const [categoriess, setcategories] = useState([]);
   const [size, setSize] = useState([]);
   const [defaultvalue, setDefault] = useState([]);
-
+  const [form, setForm] = useState({subcategory_id:4, size_id:2});
   useEffect(() => {
-    filter();
+    allData();
     filterSizeMore();
     categories();
     sizes();
   }, []);
+
+  const allData = async () => {
+    let res = await fetch(
+      "https://espsofttech.org:6019/api/getAllItemByFilter",
+      {}
+    );
+    res = await res.json();
+    await setallData(res.data);
+    let newArray = await res.data.filter(function (el)
+    {
+      return el.subcategory_id == form.subcategory_id && el.size_id == form.size_id;
+    })
+    setData(newArray);
+    console.log(newArray)
+  };
+
+
   const filter = async (item, i) => {
+    console.log(item , i)
     let res = await fetch(
       "https://espsofttech.org:6019/api/getAllItemByFilter",
       {}
     );
     res = await res.json();
     if (item) {
-      let result = res.data.filter((k) => k.subcategory_id == item);
+      let result = res.data.filter((k) => k.subcategory_id == item && k.size_id == i ) ;
       setData(result);
+      console.log(result)
     } else {
       setData(res.data);
     }
@@ -34,44 +54,39 @@ function Cart({ handleClick }) {
     let itemValue = localStorage.getItem("itemvalue");
     if (i) {
       let result2 = data.filter(
-        (size) => size.size_id == i && size.subcategory_id == itemValue
-      );
+        (size) => size.size_id == i && size.subcategory_id == itemValue);
       setFilterSize(result2);
     } else {
       setFilterSize(data);
     }
-  };
-  //   console.log(filterSizeFilter);
+  }
+
   const filterData = async (e) => {
-    filter(e.target.value, "");
-    // console.log(e.target.value);
-    localStorage.setItem("itemvalue", e.target.value);
+  await  filter(e.target.value , "");
+    localStorage.setItem("itemvalue", e.target.value );
   };
 
-  const filterSize = function (e) {
-    filter("", e.target.value);
+  const filterSize = async function (e) {
+   await filter("", e.target.value);
     filterSizeMore(e.target.value);
   };
+ 
   const categories = async () => {
     let res = await fetch(
       "https://espsofttech.org:6019/api/getAllSubcategories",
       {}
     );
     res = await res.json();
-    // console.log("res", res.data);
-    setcategories(res.data);
+    setcategories(res.data)
   };
   const sizes = async () => {
     let res = await fetch("https://espsofttech.org:6019/api/getsize", {
       method: "post",
     });
     res = await res.json();
-    setSize(res.data);
-    //  let settingDefault=  data.filter((d)=>d.subcategory_id==4)
+    setSize(res.data)
   };
-  // setData(settingDefault)
-  // console.log(data)
-  // console.log(categoriess.length, categoriess);
+
   return (
     <>
       <select name="category" id="categoryId" onChange={(e) => filterData(e)}>
@@ -116,4 +131,4 @@ function Cart({ handleClick }) {
   );
 }
 
-export default Cart;
+export default FilterData;
