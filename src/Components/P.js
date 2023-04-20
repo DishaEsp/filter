@@ -10,6 +10,7 @@ function FilterData({ handleClick }) {
   const [categoriess, setcategories] = useState([]);
   const [size, setSize] = useState([]);
   const [defaultvalue, setDefault] = useState([]);
+  const [selectedCategory , setSelectedCategory] = useState("")
   const [inputData , setInputData] = useState({
     category:"",
     size:""
@@ -66,13 +67,10 @@ function FilterData({ handleClick }) {
     }
   };
 
-  const filterData = async (e , size) => {
+  const filterData = async (e) => {
 
-
-    setInputData({...inputData, [e.target.category]:e.target.value})
-    console.log(inputData)
-  await  filter(e.target.value,  e.target.size);
-  console.log(e.target.value,  e.target.size)
+  await  filter(e.target.value);
+  console.log(e.target.value)
     localStorage.setItem("itemvalue", e.target.value );
   };
 
@@ -106,7 +104,7 @@ function FilterData({ handleClick }) {
           <option value={opt.id}>{opt.sub_category_name}</option>
         ))}
       </select>
-      <select name="Size" id="sizeId" onChange={filterSize} value={inputData.size} >
+      <select name="Size" id="sizeId" onChange={filterSize} value={inputData.size}>
         {size.map((data, i) => (
           <option value={data.id}>{data.size}</option>
         ))}

@@ -54,6 +54,7 @@ import FilterAgain from './Components/FilterAgain';
 import config from './config';
 import Cart from './Components/FilterData';
 import FilterData from './Components/FilterData';
+import Practise from './Components/Practise';
 const Api_url = config.Api_url
 
 function App() {
@@ -96,7 +97,8 @@ function App() {
           </tbody>
         </table>
       </div>
-      <FilterData handleClick ={handleClick}/>
+      {/* <FilterData handleClick ={handleClick}/> */}
+      <Practise/>
     </div>
   );
 }

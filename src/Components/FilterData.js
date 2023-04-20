@@ -10,7 +10,7 @@ function FilterData({ handleClick }) {
   const [categoriess, setcategories] = useState([]);
   const [size, setSize] = useState([]);
   const [defaultvalue, setDefault] = useState([]);
-  const [form, setForm] = useState({subcategory_id:4, size_id:2});
+  const [form, setForm] = useState({subcategory_id:8, size_id:24});
   useEffect(() => {
     allData();
     filterSizeMore();
@@ -25,24 +25,21 @@ function FilterData({ handleClick }) {
     );
     res = await res.json();
     await setallData(res.data);
-    let newArray = await res.data.filter(function (el)
-    {
-      return el.subcategory_id == form.subcategory_id && el.size_id == form.size_id;
-    })
+    let newArray = await res.data.filter((el)=>el.subcategory_id == form.subcategory_id && el.size_id == form.size_id)
     setData(newArray);
     console.log(newArray)
   };
 
-
-  const filter = async (item, i) => {
-    console.log(item , i)
+  const filter = async (item, iiii) => {
+    console.log(item)
+    console.log(iiii)
     let res = await fetch(
       "https://espsofttech.org:6019/api/getAllItemByFilter",
       {}
     );
     res = await res.json();
-    if (item) {
-      let result = res.data.filter((k) => k.subcategory_id == item && k.size_id == i ) ;
+    if (res) {
+      let result = res.data.filter((k) => k.subcategory_id == item && k.size_id == form.size_id ) ;
       setData(result);
       console.log(result)
     } else {
@@ -54,7 +51,7 @@ function FilterData({ handleClick }) {
     let itemValue = localStorage.getItem("itemvalue");
     if (i) {
       let result2 = data.filter(
-        (size) => size.size_id == i && size.subcategory_id == itemValue);
+        (size) => size.size_id == i && size.subcategory_id == form.size_id);
       setFilterSize(result2);
     } else {
       setFilterSize(data);
@@ -62,6 +59,8 @@ function FilterData({ handleClick }) {
   }
 
   const filterData = async (e) => {
+    console.log('ddddddddddddddd')
+
   await  filter(e.target.value , "");
     localStorage.setItem("itemvalue", e.target.value );
   };
@@ -106,8 +105,8 @@ function FilterData({ handleClick }) {
           </tr>
         </thead>
         <tbody>
-          {filterSizeFilter.length > 0 &&
-            filterSizeFilter.map((item, i) => {
+          {data.length > 0 &&
+            data.map((item, i) => {
               return (
                 <tr>
                   <td>
